@@ -6,12 +6,12 @@ from langchain.chains.qa_generation.prompt import PROMPT_SELECTOR
 from langchain.schema import Document
 from langchain.vectorstores.base import VectorStoreRetriever
 
-from casalioy.load_env import (
+from retrive.load_env import (
     model_n_ctx,
     n_forward_documents,
     n_retrieve_documents,
 )
-from casalioy.utils import print_HTML
+from retrive.utils import print_HTML
 
 
 class BaseQA:

@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from langchain.embeddings import HuggingFaceEmbeddings, LlamaCppEmbeddings
 from langchain.prompts import PromptTemplate
 
-from casalioy.utils import download_if_repo
+from retrive.utils import download_if_repo
 
 load_dotenv()
 text_embeddings_model = os.environ.get("TEXT_EMBEDDINGS_MODEL")
@@ -16,9 +16,11 @@ use_mlock = os.environ.get("USE_MLOCK").lower() == "true"
 # ingest
 persist_directory = os.environ.get("PERSIST_DIRECTORY")
 documents_directory = os.environ.get("DOCUMENTS_DIRECTORY")
-chunk_size = int(os.environ.get("INGEST_CHUNK_SIZE"))
-chunk_overlap = int(os.environ.get("INGEST_CHUNK_OVERLAP"))
+chunk_size = int(os.environ.get("INGEST_CHUNK_SIZE", 500))
+chunk_overlap = int(os.environ.get("INGEST_CHUNK_OVERLAP", 50))
 ingest_n_threads = int(os.environ.get("INGEST_N_THREADS", 1))
+
+collection_name = os.environ.get("COLLECTION_NAME", "test")
 
 # generate
 model_type = os.environ.get("MODEL_TYPE")
@@ -32,6 +34,10 @@ chain_type = os.environ.get("CHAIN_TYPE", "refine")
 n_retrieve_documents = int(os.environ.get("N_RETRIEVE_DOCUMENTS", 25))
 n_forward_documents = int(os.environ.get("N_FORWARD_DOCUMENTS", 3))
 n_gpu_layers = int(os.environ.get("N_GPU_LAYERS", 0))
+
+model_top_k = int(os.environ.get("MODEL_TOP_K", 12))
+model_top_p = float(os.environ.get("MODEL_TOP_P", 1))
+model_n_predict = int(os.environ.get("MODEL_N_PREDICT", -1))
 
 text_embeddings_model = download_if_repo(text_embeddings_model)
 model_path = download_if_repo(model_path)

@@ -9,8 +9,8 @@ from libgenesis import Libgen
 from prompt_toolkit import PromptSession
 from prompt_toolkit.shortcuts import ProgressBar
 
-from casalioy.ingest import Ingester
-from casalioy.load_env import (
+from ingest import Ingester
+from retrive.load_env import (
     chunk_overlap,
     chunk_size,
     get_embedding_model,
@@ -22,8 +22,8 @@ from casalioy.load_env import (
     persist_directory,
     use_mlock,
 )
-from casalioy.startLLM import QASystem
-from casalioy.utils import print_HTML, prompt_HTML
+from retrive.startLLM import QASystem
+from retrive.utils import print_HTML, prompt_HTML
 
 max_doc_size_mb = 5
 out_path = Path("source_documents/libgen")

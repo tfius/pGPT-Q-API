@@ -6,9 +6,9 @@ from streamlit_chat import message
 from streamlit_extras.add_vertical_space import add_vertical_space
 from streamlit_extras.colored_header import colored_header
 
-from casalioy import startLLM
-from casalioy.startLLM import QASystem
-from casalioy.utils import print_HTML
+from retrive import startLLM
+from retrive.startLLM import QASystem
+from retrive.utils import print_HTML
 
 title = "CASALIOY"
 

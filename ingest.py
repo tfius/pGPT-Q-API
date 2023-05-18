@@ -20,14 +20,17 @@ from langchain.document_loaders import (
     UnstructuredHTMLLoader,
     UnstructuredPowerPointLoader,
     UnstructuredWordDocumentLoader,
+    UnstructuredMarkdownLoader,
+    UnstructuredODTLoader,
+    EverNoteLoader,
 )
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from load_env import chunk_overlap, chunk_size, documents_directory, get_embedding_model, ingest_n_threads, persist_directory
+from retrive.load_env import chunk_overlap, chunk_size, documents_directory, get_embedding_model, ingest_n_threads, persist_directory
 from prompt_toolkit import PromptSession
 from prompt_toolkit.shortcuts import ProgressBar
 from qdrant_client import QdrantClient, models
 
-from casalioy.utils import print_HTML, prompt_HTML
+from retrive.utils import print_HTML, prompt_HTML
 
 with contextlib.suppress(RuntimeError):
     multiprocessing.set_start_method("spawn", force=True)
@@ -48,6 +51,9 @@ class Ingester:
         "ppt": UnstructuredPowerPointLoader,
         "eml": UnstructuredEmailLoader,
         "msg": OutlookMessageLoader,
+        "md": UnstructuredMarkdownLoader,
+        "odt": UnstructuredODTLoader,
+        "enex": EverNoteLoader,
     }
 
     def __init__(self, db_dir: str, collection: str = "test", verbose=False):
@@ -129,6 +135,15 @@ class Ingester:
             print_HTML("<r>Processed {fname}</r>", fname=filepath.name)
         return res
 
+    def add_one_file(self, filepath: Path, collection_name: str, chunk_size: int, chunk_overlap: int):
+        self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+        self.encode_fun = get_embedding_model()[1]
+        document = self.load_one_doc(filepath)
+        split_document = self.text_splitter.split_documents(document)
+        embeddings = self.embed_documents_with_progress(self.encode_fun, split_document)
+        self.store_embeddings(embeddings)
+        
+    
     def ingest_from_directory(self, path: str, chunk_size: int, chunk_overlap: int) -> None:
         """ingest all supported files from the directory"""
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)

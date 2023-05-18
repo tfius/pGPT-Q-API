@@ -1,7 +1,7 @@
 """dev utility to debug formatting problems arising in print_HTML"""
 from prompt_toolkit import HTML
 
-from casalioy.utils import print_HTML
+from retrive.utils import print_HTML
 
 ## Add to print_HTML
 # with open("temp.txt", "w", encoding="utf-8") as f:

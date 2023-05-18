@@ -1,33 +1,11 @@
-<!--suppress HtmlDeprecatedAttribute -->
-<div align="center">
 
-<a href="https://www.buymeacoffee.com/cassowary" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-white.png" alt="Buy Me A Coffee" height="30" width="140"></a>
+pipreqs --ignore bin,etc,include,lib,lib64,models,source_documents,.github --encoding utf-8
 
-**NOW** WITH
-<a href="https://github.com/su77ungr/CASALIOY/discussions/76"><img src="https://img.shields.io/badge/GUI-blue.svg" alt="Roadmap 2023">
-<br>
-<p align="center">
-
-# CASALIOY - Your local langchain toolkit
-
-</p>
-
-<h2>
-<p>
-<img height="300" src="https://github.com/su77ungr/GEEB-GPT/assets/69374354/2e59734c-0de7-4057-be7a-14729e1d5acd" alt="Qdrant"><br>
 
 <a href="https://github.com/su77ungr/CASALIOY/issues/8"><img src="https://img.shields.io/badge/Feature-Requests-bc1439.svg" alt="Roadmap 2023"> [![Docker Pulls](https://badgen.net/docker/pulls/su77ungr/casalioy?icon=docker&label=pulls)](https://hub.docker.com/r/su77ungr/casalioy/)</a>
 ![example workflow](https://github.com/su77ungr/CASALIOY/actions/workflows/docker-image.yml/badge.svg)
 
-<br><br>
-</p>
-The fastest toolkit for air-gapped LLMs
-
 [LangChain](https://github.com/hwchase17/langchain) + [LlamaCpp](https://pypi.org/project/llama-cpp-python/) + [qdrant](https://qdrant.tech/)
-
-<br>
-</h2>
-</div>
 
 # Setup
 

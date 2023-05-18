@@ -9,8 +9,8 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.formatted_text.html import html_escape
 
-from casalioy.CustomChains import RefineQA, StuffQA
-from casalioy.load_env import (
+from retrive.CustomChains import RefineQA, StuffQA
+from retrive.load_env import (
     chain_type,
     get_embedding_model,
     get_prompt_template_kwargs,
@@ -26,7 +26,7 @@ from casalioy.load_env import (
     persist_directory,
     use_mlock,
 )
-from casalioy.utils import print_HTML, prompt_HTML
+from retrive.utils import print_HTML, prompt_HTML
 
 
 class QASystem:
@@ -43,6 +43,9 @@ class QASystem:
         use_mlock: bool,
         n_gpu_layers: int,
         collection="test",
+        top_k=50,
+        top_p=1,
+        n_predict=-1
     ):
         # Get embeddings and local vector store
         self.qdrant_client = qdrant_client.QdrantClient(path=db_path, prefer_grpc=True)
@@ -61,14 +64,24 @@ class QASystem:
                     stop=stop,
                     callbacks=callbacks,
                     verbose=True,
-                    n_threads=6,
+                    n_threads=16,
                     n_batch=1000,
                     use_mlock=use_mlock,
-                    n_gpu_layers=n_gpu_layers,
+                    #top_k=top_k,
+                    #top_p=top_p,
+                    #n_predict=n_predict,
+                    #n_gpu_layers=n_gpu_layers,
                     max_tokens=model_max_tokens,
                 )
                 # Fix wrong default
                 object.__setattr__(llm, "get_num_tokens", lambda text: len(llm.client.tokenize(b" " + text.encode("utf-8"))))
+                
+                # state = llm.client.__getstate__()
+                # state["top_k"] = top_k
+                # state["top_p"] = top_p
+                # state["n_predict"] = n_predict
+                # llm.client.__setstate__(state)
+                #llm.client.verbose = False
 
             case "GPT4All":
                 from langchain.llms import GPT4All
