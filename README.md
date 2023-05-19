@@ -1,29 +1,34 @@
+# FORK OF A FORK OF A FORK
 
+This is a fork of: 
+   https://github.com/su77ungr/CASALIOY
+   which is a fork of 
+   https://github.com/imartinez/privateGPT/
+   and then added fastapi similar to 
+   https://github.com/menloparklab/privateGPT-app/
+ 
+
+### This was put together in a hackish way to test things out. 
+
+#### TODO
+- [ ] fix container build workflow
+- [ ] add tests
+- [ ] add more documentation
+- [ ] add more features
+- [ ] add more models
+- [ ] add more datas
+
+Documentation below is from forked repo, container is not built correctly, poetry install might not work, 
+install all with ```pip install -r requirements.txt```
+
+## Server
+to start server run ```uvicorn main:app --reload```
+
+
+### build requrements
 pipreqs --ignore bin,etc,include,lib,lib64,models,source_documents,.github --encoding utf-8
 
 
-<a href="https://github.com/su77ungr/CASALIOY/issues/8"><img src="https://img.shields.io/badge/Feature-Requests-bc1439.svg" alt="Roadmap 2023"> [![Docker Pulls](https://badgen.net/docker/pulls/su77ungr/casalioy?icon=docker&label=pulls)](https://hub.docker.com/r/su77ungr/casalioy/)</a>
-![example workflow](https://github.com/su77ungr/CASALIOY/actions/workflows/docker-image.yml/badge.svg)
-
-[LangChain](https://github.com/hwchase17/langchain) + [LlamaCpp](https://pypi.org/project/llama-cpp-python/) + [qdrant](https://qdrant.tech/)
-
-# Setup
-
-### Docker (⛔️ only supports Ubuntu rn) 
-
-```bash
-docker pull su77ungr/casalioy:stable
-```
-
-```bash
-docker run -it --shm-size=16gb su77ungr/casalioy:stable /bin/bash
-```
-
-for older docker without GUI use `casalioy:latest` might deprecate soon
-
-> Fetch the default models
-
-> All set! Proceed with ingesting your [dataset](#ingesting-your-own-dataset)
 
 ### Build it from source
 
@@ -45,7 +50,7 @@ pip uninstall -y llama-cpp-python
 CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install --force llama-cpp-python
 ```
 
-> > Edit the example.env to fit your models and rename it to .env
+> Edit the example.env to fit your models and rename it to .env
 
 ```env
 # Generic
@@ -68,6 +73,12 @@ MODEL_STOP=[STOP]
 CHAIN_TYPE=stuff
 N_RETRIEVE_DOCUMENTS=100 # How many documents to retrieve from the db
 N_FORWARD_DOCUMENTS=6 # How many documents to forward to the LLM, chosen among those retrieved
+
+# option helps prevent the model from generating repetitive or monotonous text. A higher value (e.g., 1.5) will penalize repetitions more strongly, while a lower value (e.g., 0.9) will be more lenient. The default value is 1.1.
+MODEL_REPEAT_PENALTY=1.3 
+MODEL_TOP_K=50 
+MODEL_TOP_P=1
+MODEL_NO_REPEAT_NGRAM_SIZE=6
 ```
 
 This should look like this
@@ -98,17 +109,17 @@ This should look like this
 
 To automatically ingest different data types (.txt, .pdf, .csv, .epub, .html, .docx, .pptx, .eml, .msg)
 
-> This repo includes dummy [files](https://github.com/su77ungr/CASALIOY/tree/main/source_documents)
+
 > inside `source_documents` to run tests with.
 
 ```shell
-python casalioy/ingest.py # optional <path_to_your_data_directory>
+python retrive/ingest.py # optional <path_to_your_data_directory>
 ```
 
 Optional: use `y` flag to purge existing vectorstore and initialize fresh instance
 
 ```shell
-python casalioy/ingest.py # optional <path_to_your_data_directory> y
+python retrive/ingest.py # optional <path_to_your_data_directory> y
 ```
 
 This spins up a local qdrant namespace inside the `db` folder containing the local vectorstore. Will take time,
@@ -121,7 +132,7 @@ database. To remove dataset simply remove `db` folder.
 In order to ask a question, run a command like:
 
 ```shell
-python casalioy/startLLM.py
+python retrive/startLLM.py
 ```
 
 And wait for the script to require your input.
@@ -139,68 +150,10 @@ local environment.
 
 Type `exit` to finish the script.
 
-## Chat inside GUI (new feature)
-
-Introduced by [@alxspiker](https://github.com/alxspiker) -> see [#21](https://github.com/su77ungr/CASALIOY/pull/21)
 
 ```shell
-streamlit run casalioy/gui.py
+streamlit run retrive/gui.py
 ```
 
-# LLM options
-
-### models outside of the GPT-J ecosphere  (work out of the box)
-
-| Model                                                                                                                                            | BoolQ | PIQA | HellaSwag | WinoGrande | ARC-e | ARC-c | OBQA | Avg. |
-|:-------------------------------------------------------------------------------------------------------------------------------------------------|:-----:|:----:|:---------:|:----------:|:-----:|:-----:|:----:|:----:|
-| [GPT4All-13b-snoozy q5](https://huggingface.co/TheBloke/GPT4All-13B-snoozy-GGML/blob/main/GPT4All-13B-snoozy.ggml.q5_1.bin)                      | 83.3  | 79.2 |   75.0    |    71.3    | 60.9  | 44.2  | 43.4 | 65.3 |
-
-### models inside of the GPT-J ecosphere
-
-| Model                                                                             | BoolQ | PIQA | HellaSwag | WinoGrande | ARC-e | ARC-c | OBQA | Avg. |
-|:----------------------------------------------------------------------------------|:-----:|:----:|:---------:|:----------:|:-----:|:-----:|:----:|:----:|
-| GPT4All-J 6B v1.0                                                                 | 73.4  | 74.8 |   63.4    |    64.7    | 54.9  | 36.0  | 40.2 | 58.2 |
-| [GPT4All-J v1.1-breezy](https://gpt4all.io/models/ggml-gpt4all-j-v1.1-breezy.bin) | 74.0  | 75.1 |   63.2    |    63.6    | 55.4  | 34.9  | 38.4 | 57.8 |
-| [GPT4All-J v1.2-jazzy](https://gpt4all.io/models/ggml-gpt4all-j-v1.2-jazzy.bin)   | 74.8  | 74.9 |   63.6    |    63.8    | 56.6  | 35.3  | 41.0 | 58.6 |
-| [GPT4All-J v1.3-groovy](https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin) | 73.6  | 74.3 |   63.8    |    63.5    | 57.7  | 35.0  | 38.8 | 58.1 |
-| [GPT4All-J Lora 6B](https://gpt4all.io/models/)                                   | 68.6  | 75.8 |   66.2    |    63.5    | 56.4  | 35.7  | 40.2 | 58.1 |
-
-all the supported models from [here](https://huggingface.co/nomic-ai/gpt4all-13b-snoozy) (custom LLMs in Pipeline)
-
-### Convert GGML model to GGJT-ready model v1 (for truncation error or not supported models)
-
-1. Download ready-to-use models
-
-> Browse Hugging Face for [models](https://huggingface.co/)
-
-2. Convert locally
-
-> ``` python convert.py``` [see discussion](https://github.com/su77ungr/CASALIOY/issues/10#issue-1706854398)
-
-# Pipeline
-
-<br><br>
-
-<img src="https://qdrant.tech/articles_data/langchain-integration/flow-diagram.png"></img>
-<br><br>
-
-Selecting the right local models and the power of `LangChain` you can run the entire pipeline locally, without any data
-leaving your environment, and with reasonable performance.
-
-- `ingest.py` uses `LangChain` tools to parse the document and create embeddings locally using `LlamaCppEmbeddings`. It
-  then stores the result in a local vector database using `Qdrant` vector store.
-
-- `startLLM.py` can handle every LLM that is llamacpp compatible (default `GPT4All-J`). The context for the answers is
-  extracted from the local vector store using a similarity search to locate the right piece of context from the docs.
-
-<br><br>
-
-
-# Disclaimer
-
-The contents of this repository are provided "as is" and without warranties of any kind, whether express or implied. We
-do not warrant or represent that the information contained in this repository is accurate, complete, or up-to-date. We
-expressly disclaim any and all liability for any errors or omissions in the content of this repository.
-
-By using this repository, you are agreeing to comply with and be bound by the above disclaimer. If you do not agree with
-any part of this disclaimer, please do not use this repository.
+## Disclaimer
+see DISCLAIMER.md

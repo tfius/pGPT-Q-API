@@ -75,7 +75,7 @@ class QASystem:
                 )
                 # Fix wrong default
                 object.__setattr__(llm, "get_num_tokens", lambda text: len(llm.client.tokenize(b" " + text.encode("utf-8"))))
-                
+                # setting state will restart llamacpp, there has to be a better way to apply these params
                 # state = llm.client.__getstate__()
                 # state["top_k"] = top_k
                 # state["top_p"] = top_p
