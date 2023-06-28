@@ -27,16 +27,23 @@ model_type = os.environ.get("MODEL_TYPE")
 model_path = os.environ.get("MODEL_PATH")
 model_n_ctx = int(os.environ.get("MODEL_N_CTX"))
 model_max_tokens = int(os.environ.get("MODEL_MAX_TOKENS"))
+model_n_threads = int(os.environ.get("MODEL_N_THREADS", 4))
+model_n_batch = int(os.environ.get("MODEL_N_BATCH", 1000))
+model_verbose = os.environ.get("MODEL_VERBOSE", "false").lower() == "true"
 model_temp = float(os.environ.get("MODEL_TEMP", "0.8"))
 model_stop = os.environ.get("MODEL_STOP", "")
 model_stop = model_stop.split(",") if model_stop else []
+model_repeat_penalty = float(os.environ.get("MODEL_REPEAT_PENALTY", "1.1"))
 chain_type = os.environ.get("CHAIN_TYPE", "refine")
+
 n_retrieve_documents = int(os.environ.get("N_RETRIEVE_DOCUMENTS", 25))
 n_forward_documents = int(os.environ.get("N_FORWARD_DOCUMENTS", 3))
 n_gpu_layers = int(os.environ.get("N_GPU_LAYERS", 0))
 
-model_top_k = int(os.environ.get("MODEL_TOP_K", 12))
-model_top_p = float(os.environ.get("MODEL_TOP_P", 1))
+model_use_mmap = os.environ.get("MODEL_USE_MMAP", "false").lower() == "true"
+
+model_top_k = float(os.environ.get("MODEL_TOP_K", 40))
+model_top_p = float(os.environ.get("MODEL_TOP_P", 0.95))
 model_n_predict = int(os.environ.get("MODEL_N_PREDICT", -1))
 
 text_embeddings_model = download_if_repo(text_embeddings_model)

@@ -21,11 +21,18 @@ from retrive.load_env import (
     model_temp,
     model_type,
     model_n_predict,
+    model_top_k,
+    model_top_p,
     n_forward_documents,
     n_gpu_layers,
     n_retrieve_documents,
     persist_directory,
     use_mlock,
+    model_repeat_penalty,
+    model_use_mmap,
+    model_n_threads,
+    model_n_batch,
+    model_verbose,
 )
 from retrive.utils import print_HTML, prompt_HTML
 
@@ -39,14 +46,14 @@ class QASystem:
         db_path: str,
         model_path: str,
         n_ctx: int,
-        model_temp: float,
+        #model_temp: float,
         stop: list[str],
-        use_mlock: bool,
-        n_gpu_layers: int,
+        #use_mlock: bool,
+        #n_gpu_layers: int,
         collection="test",
-        top_k=50,
-        top_p=1,
-        n_predict=-1
+        #top_k=50,
+        #top_p=1,
+        #n_predict=-1
     ):
         # Get embeddings and local vector store
         self.qdrant_client = qdrant_client.QdrantClient(path=db_path, prefer_grpc=True)
@@ -64,18 +71,20 @@ class QASystem:
                     temperature=model_temp,
                     stop=stop,
                     callbacks=callbacks,
-                    verbose=True,
-                    n_threads=16,
-                    n_batch=1000,
+                    verbose=model_verbose,
+                    n_threads=model_n_threads,
+                    n_batch=model_n_batch,
                     use_mlock=use_mlock,
-                    #top_k=top_k,
-                    #top_p=top_p,
+                    top_k=model_top_k,
+                    top_p=model_top_p,
                     n_predict=model_n_predict,
-                    #n_gpu_layers=n_gpu_layers,
+                    n_gpu_layers=n_gpu_layers,
                     max_tokens=model_max_tokens,
+                    repeat_penalty=model_repeat_penalty,
+                    use_mmap=model_use_mmap,
                 )
                 # Fix wrong default
-                object.__setattr__(llm, "get_num_tokens", lambda text: len(llm.client.tokenize(b" " + text.encode("utf-8"))))
+                # object.__setattr__(llm, "get_num_tokens", lambda text: len(llm.client.tokenize(b" " + text.encode("utf-8"))))
                 # setting state will restart llamacpp, there has to be a better way to apply these params
                 #state = llm.client.__getstate__()
                 #state["top_k"] = top_k

@@ -111,7 +111,8 @@ async def query(query: str, collection_name: Optional[str] = None):
     
     # qdrant_client = qdrant_client.QdrantClient(path=persist_directory, prefer_grpc=True)
     # qdrant_langchain = Qdrant(client=qdrant_client, collection_name=collection_name, embeddings=app.embeddings)
-    qa = QASystem(app.embeddings.client.encode, persist_directory, model_path, model_n_ctx, model_temp, model_stop, use_mlock, n_gpu_layers, collection_name, model_top_k, model_top_p, model_n_predict)
+    #qa = QASystem(app.embeddings.client.encode, persist_directory, model_path, model_n_ctx, model_temp, model_stop, use_mlock, n_gpu_layers, collection_name, model_top_k, model_top_p, model_n_predict)
+    qa = QASystem(app.embeddings.client.encode, persist_directory, model_path, model_n_ctx, model_stop, collection_name)
     res = qa.prompt_once(query)
     #print(res)   
     #answer, docs = res['result'], res['source_documents']
