@@ -2,11 +2,10 @@ python-dotenv
 pathlib
 langchain==0.0.218
 pygpt4all
-qdrant-client
+qdrant-client==1.1.7
 unstructured
 sentencepiece
 llama-cpp-python==0.1.66
-urllib3==1.26.6
 pdfminer.six==20221105
 python-dotenv==1.0.0
 unstructured==0.6.6
