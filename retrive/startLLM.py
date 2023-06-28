@@ -20,6 +20,7 @@ from retrive.load_env import (
     model_stop,
     model_temp,
     model_type,
+    model_n_predict,
     n_forward_documents,
     n_gpu_layers,
     n_retrieve_documents,
@@ -69,18 +70,18 @@ class QASystem:
                     use_mlock=use_mlock,
                     #top_k=top_k,
                     #top_p=top_p,
-                    #n_predict=n_predict,
+                    n_predict=model_n_predict,
                     #n_gpu_layers=n_gpu_layers,
                     max_tokens=model_max_tokens,
                 )
                 # Fix wrong default
                 object.__setattr__(llm, "get_num_tokens", lambda text: len(llm.client.tokenize(b" " + text.encode("utf-8"))))
                 # setting state will restart llamacpp, there has to be a better way to apply these params
-                # state = llm.client.__getstate__()
-                # state["top_k"] = top_k
-                # state["top_p"] = top_p
-                # state["n_predict"] = n_predict
-                # llm.client.__setstate__(state)
+                #state = llm.client.__getstate__()
+                #state["top_k"] = top_k
+                #state["top_p"] = top_p
+                #state["n_predict"] = n_predict
+                #llm.client.__setstate__(state)
                 #llm.client.verbose = False
 
             case "GPT4All":
