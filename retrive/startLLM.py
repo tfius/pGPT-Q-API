@@ -127,6 +127,7 @@ class QASystem:
         # Get the answer from the chain
         res = self.qa(query)
         answer, docs = res["result"], res["source_documents"]
+        print(f"res:{res} result: {answer}, sources: {docs}")
 
         # Print the result
         sources_str = "\n\n".join(f">> <source>{html_escape(document.metadata['source'])}</source>:\n{html_escape(document.page_content)}" for document in docs)

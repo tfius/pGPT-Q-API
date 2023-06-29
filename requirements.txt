@@ -26,3 +26,5 @@ black
 pycln
 huggingface-hub
 uvicorn
+streamlit_chat
+streamlit_extras
