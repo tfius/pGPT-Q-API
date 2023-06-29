@@ -33,6 +33,7 @@ from retrive.load_env import (
     model_n_threads,
     model_n_batch,
     model_verbose,
+    model_streaming_response,
 )
 from retrive.utils import print_HTML, prompt_HTML
 
@@ -82,6 +83,7 @@ class QASystem:
                     max_tokens=model_max_tokens,
                     repeat_penalty=model_repeat_penalty,
                     use_mmap=model_use_mmap,
+                    streaming=model_streaming_response,
                 )
                 # Fix wrong default
                 # object.__setattr__(llm, "get_num_tokens", lambda text: len(llm.client.tokenize(b" " + text.encode("utf-8"))))

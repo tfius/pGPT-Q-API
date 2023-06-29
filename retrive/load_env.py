@@ -21,6 +21,7 @@ chunk_overlap = int(os.environ.get("INGEST_CHUNK_OVERLAP", 50))
 ingest_n_threads = int(os.environ.get("INGEST_N_THREADS", 1))
 
 collection_name = os.environ.get("COLLECTION_NAME", "test")
+model_streaming_response = os.environ.get("MODEL_STREAMING_RESPONSE", "false").lower() == "true"
 
 # generate
 model_type = os.environ.get("MODEL_TYPE")
